@@ -1,5 +1,16 @@
-// Check if user is already logged in
+// Wait for both DOM and SimpleWebAuthn library to load
+let isReady = false;
 window.addEventListener("DOMContentLoaded", () => {
+    // Check if SimpleWebAuthn is loaded
+    if (typeof SimpleWebAuthnBrowser === 'undefined') {
+        console.error("SimpleWebAuthnBrowser not loaded yet, retrying...");
+        setTimeout(() => window.location.reload(), 1000);
+        return;
+    }
+    
+    isReady = true;
+    
+    // Check if user is already logged in
     const session = localStorage.getItem("passkeySession");
     if (session) {
         const sessionData = JSON.parse(session);
@@ -7,10 +18,11 @@ window.addEventListener("DOMContentLoaded", () => {
             window.location.href = "/calculator.html";
         }
     }
+    
+    // Attach event listeners after DOM is ready
+    document.getElementById("registerButton").addEventListener("click", register);
+    document.getElementById("loginButton").addEventListener("click", login);
 });
-
-document.getElementById("registerButton").addEventListener("click", register);
-document.getElementById("loginButton").addEventListener("click", login);
 
 function showMessage(message, isError = false) {
     const messageElement = document.getElementById("message");
@@ -19,6 +31,12 @@ function showMessage(message, isError = false) {
 }
 
 async function register() {
+    // Check if library is loaded
+    if (typeof SimpleWebAuthnBrowser === 'undefined') {
+        showMessage("WebAuthn library not loaded. Please refresh the page.", true);
+        return;
+    }
+    
     // Retrieve the username from the input field
     const username = document.getElementById("username").value;
 
@@ -65,6 +83,12 @@ async function register() {
 }
 
 async function login() {
+    // Check if library is loaded
+    if (typeof SimpleWebAuthnBrowser === 'undefined') {
+        showMessage("WebAuthn library not loaded. Please refresh the page.", true);
+        return;
+    }
+    
     // Retrieve the username from the input field
     const username = document.getElementById("username").value;
 
