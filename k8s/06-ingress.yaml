@@ -5,6 +5,8 @@ metadata:
   namespace: circle-calculator
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/affinity: "true"
+    traefik.ingress.kubernetes.io/session-cookie-name: "passkey-sticky"
 spec:
   ingressClassName: traefik
   tls:
