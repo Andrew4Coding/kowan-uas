@@ -42,7 +42,27 @@ if (process.env.NODE_ENV === "development" || config.NODE_ENV === "development")
 
 // Handle security and origin in production
 if (process.env.NODE_ENV === "production" || config.NODE_ENV === "production") {
-    app.use(helmet());
+    app.use(
+        helmet({
+            contentSecurityPolicy: {
+                directives: {
+                    defaultSrc: ["'self'"],
+                    scriptSrc: [
+                        "'self'",
+                        "https://unpkg.com",
+                        "'unsafe-inline'"
+                    ],
+                    styleSrc: ["'self'", "'unsafe-inline'"],
+                    imgSrc: ["'self'", "data:", "https:"],
+                    connectSrc: ["'self'"],
+                    fontSrc: ["'self'"],
+                    objectSrc: ["'none'"],
+                    mediaSrc: ["'self'"],
+                    frameSrc: ["'none'"],
+                },
+            },
+        }),
+    );
 }
 
 /************************************************************************************

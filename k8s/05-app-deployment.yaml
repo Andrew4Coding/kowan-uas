@@ -52,6 +52,12 @@ spec:
             secretKeyRef:
               name: app-secrets
               key: SESSION_SECRET
+        - name: RP_NAME
+          value: "Passkeys Tutorial"
+        - name: RP_ID
+          value: "kowan-uas.andrewaryo.com"
+        - name: ORIGIN
+          value: "https://kowan-uas.andrewaryo.com"
         ports:
         - containerPort: 8080
           name: http
