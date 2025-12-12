@@ -52,6 +52,8 @@ export const handleRegisterStart = async (
         });
 
         req.session.currentChallenge = options.challenge;
+
+        // @ts-expect-error
         req.session.userId = user.id;
         console.log("[REGISTER START] Success, sending options with userId:", user.id);
         res.send(options);
@@ -71,6 +73,8 @@ export const handleRegisterFinish = async (
     next: NextFunction,
 ) => {
     const { body } = req;
+
+    // @ts-expect-error
     const { currentChallenge, userId } = req.session;
     console.log("[REGISTER FINISH] Session data - userId:", userId, "challenge:", currentChallenge);
 
@@ -118,6 +122,8 @@ export const handleRegisterFinish = async (
         );
     } finally {
         req.session.currentChallenge = undefined;
+
+        // @ts-expect-error
         req.session.userId = undefined;
     }
 };
