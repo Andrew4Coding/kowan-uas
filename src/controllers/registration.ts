@@ -51,10 +51,9 @@ export const handleRegisterStart = async (
             supportedAlgorithmIDs: [-7, -257],
         });
 
-        req.session.loggedInUserId = user.id;
         req.session.currentChallenge = options.challenge;
         console.log("[REGISTER START] Success, sending options");
-        res.send(options);
+        res.send({ ...options, userId: user.id });
     } catch (error) {
         console.error("[REGISTER START] Error:", error);
         next(
@@ -71,10 +70,11 @@ export const handleRegisterFinish = async (
     next: NextFunction,
 ) => {
     const { body } = req;
-    const { currentChallenge, loggedInUserId } = req.session;
-    console.log("[REGISTER FINISH] Session data - userId:", loggedInUserId, "challenge:", currentChallenge);
+    const { currentChallenge } = req.session;
+    const userId = body.userId;
+    console.log("[REGISTER FINISH] Session data - userId:", userId, "challenge:", currentChallenge);
 
-    if (!loggedInUserId) {
+    if (!userId) {
         return next(new CustomError("User ID is missing", 400));
     }
 
@@ -95,7 +95,7 @@ export const handleRegisterFinish = async (
             const { credentialPublicKey, credentialID, counter } =
                 verification.registrationInfo;
             await credentialService.saveNewCredential(
-                loggedInUserId,
+                userId,
                 uint8ArrayToBase64(credentialID),
                 uint8ArrayToBase64(credentialPublicKey),
                 counter,
@@ -113,7 +113,6 @@ export const handleRegisterFinish = async (
                 : new CustomError("Internal Server Error", 500),
         );
     } finally {
-        req.session.loggedInUserId = undefined;
         req.session.currentChallenge = undefined;
     }
 };

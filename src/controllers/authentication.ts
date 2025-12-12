@@ -31,8 +31,6 @@ export const handleLoginStart = async (
             return next(new CustomError("User not found", 404));
         }
 
-        req.session.loggedInUserId = user.id;
-
         // allowCredentials is purposely for this demo left empty. This causes all existing local credentials
         // to be displayed for the service instead only the ones the username has registered.
         const options = await generateAuthenticationOptions({
@@ -61,12 +59,8 @@ export const handleLoginFinish = async (
     next: NextFunction,
 ) => {
     const { body } = req;
-    const { currentChallenge, loggedInUserId } = req.session;
-    console.log("[LOGIN FINISH] Session data - userId:", loggedInUserId, "challenge:", currentChallenge);
-
-    if (!loggedInUserId) {
-        return next(new CustomError("User ID is missing", 400));
-    }
+    const { currentChallenge } = req.session;
+    console.log("[LOGIN FINISH] Session data - challenge:", currentChallenge);
 
     if (!currentChallenge) {
         return next(new CustomError("Current challenge is missing", 400));
@@ -121,6 +115,5 @@ export const handleLoginFinish = async (
         );
     } finally {
         req.session.currentChallenge = undefined;
-        req.session.loggedInUserId = undefined;
     }
 };
