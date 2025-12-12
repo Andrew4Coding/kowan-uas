@@ -15,9 +15,7 @@ declare module "express-session" {
     }
 }
 
-/************************************************************************************
- *                              Basic Express Middlewares
- ***********************************************************************************/
+
 app.set("json spaces", 4);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -29,18 +27,16 @@ app.use(
         resave: false,
         cookie: {
             maxAge: 86400000,
-            httpOnly: true, // Ensure to not expose session cookies to clientside scripts
+            httpOnly: true,
         },
     }),
 );
 
-// Handle logs in console during development
 if (process.env.NODE_ENV === "development" || config.NODE_ENV === "development") {
     app.use(morgan("dev"));
     app.use(cors());
 }
 
-// Handle security and origin in production
 if (process.env.NODE_ENV === "production" || config.NODE_ENV === "production") {
     app.use(
         helmet({
@@ -65,9 +61,6 @@ if (process.env.NODE_ENV === "production" || config.NODE_ENV === "production") {
     );
 }
 
-/************************************************************************************
- *                               Register all routes
- ***********************************************************************************/
 app.use("/api/passkey", passkeyRoutes);
 
 app.use(express.static("src/public"));

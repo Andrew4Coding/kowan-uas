@@ -3,18 +3,40 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Passkey Tutorial</title>
+        <title>Passkey Authentication</title>
         <link rel="stylesheet" href="css/style.css" />
     </head>
     <body>
-        <div class="container">
-            <h1>Passkey Tutorial</h1>
-            <div id="message"></div>
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <h1>Passkey Authentication</h1>
+                    <p class="subtitle">Secure passwordless login</p>
+                </div>
 
-            <div class="input-group">
-                <input type="text" id="username" placeholder="Enter username" />
-                <button id="registerButton">Register</button>
-                <button id="loginButton">Login</button>
+                <div id="message" class="message"></div>
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username" />
+                </div>
+
+                <div class="button-group">
+                    <button id="registerButton" class="btn btn-primary">
+                        <span>Create Account</span>
+                    </button>
+                    <button id="loginButton" class="btn btn-secondary">
+                        <span>Sign In</span>
+                    </button>
+                </div>
+
+                <div class="info-section">
+                    <p class="info-text">🔐 Uses WebAuthn for secure authentication</p>
+                </div>
             </div>
         </div>
 

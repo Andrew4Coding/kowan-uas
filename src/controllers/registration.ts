@@ -47,7 +47,6 @@ export const handleRegisterStart = async (
             authenticatorSelection: {
                 residentKey: "preferred",
             },
-            // Support for the two most common algorithms: ES256, and RS256
             supportedAlgorithmIDs: [-7, -257],
         });
 

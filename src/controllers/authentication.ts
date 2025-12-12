@@ -31,8 +31,6 @@ export const handleLoginStart = async (
             return next(new CustomError("User not found", 404));
         }
 
-        // allowCredentials is purposely for this demo left empty. This causes all existing local credentials
-        // to be displayed for the service instead only the ones the username has registered.
         const options = await generateAuthenticationOptions({
             timeout: 60000,
             allowCredentials: [],

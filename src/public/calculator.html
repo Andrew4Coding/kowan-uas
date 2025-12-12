@@ -3,31 +3,47 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Circle Area Calculator - Passkey Tutorial</title>
+        <title>Circle Calculator</title>
         <link rel="stylesheet" href="css/style.css" />
     </head>
     <body>
-        <div class="container">
-            <div class="header">
-                <h1>Circle Area Calculator</h1>
-                <div class="user-info">
-                    <span id="welcomeMessage">Welcome, <strong id="usernameDisplay"></strong>!</span>
-                    <button id="logoutButton" class="logout-btn">Logout</button>
-                </div>
-            </div>
-            <div id="message"></div>
-
-            <div class="calculator">
-                <div class="input-group">
-                    <label for="radius">Enter Radius:</label>
-                    <input type="number" id="radius" placeholder="Enter radius" step="0.01" min="0" />
-                    <button id="calculateButton">Calculate Area</button>
+        <div class="calc-container">
+            <div class="calc-card">
+                <div class="calc-header">
+                    <div class="title-section">
+                        <svg class="circle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                        </svg>
+                        <h1>Circle Calculator</h1>
+                    </div>
+                    <div class="user-badge">
+                        <span class="user-name" id="usernameDisplay"></span>
+                        <button id="logoutButton" class="btn-logout">Sign Out</button>
+                    </div>
                 </div>
 
-                <div id="result" class="result"></div>
+                <div id="message" class="message"></div>
 
-                <div class="formula">
-                    <p><strong>Formula:</strong> Area = π × r²</p>
+                <div class="calculator-section">
+                    <div class="form-group">
+                        <label for="radius">Radius</label>
+                        <div class="input-with-unit">
+                            <input type="number" id="radius" placeholder="0.00" step="0.01" min="0" />
+                            <span class="unit">units</span>
+                        </div>
+                    </div>
+
+                    <button id="calculateButton" class="btn btn-calculate">
+                        <span>Calculate Area</span>
+                    </button>
+
+                    <div id="result" class="result-card"></div>
+
+                    <div class="formula-card">
+                        <div class="formula-header">Formula</div>
+                        <div class="formula-content">A = πr²</div>
+                        <div class="formula-description">Area equals pi times radius squared</div>
+                    </div>
                 </div>
             </div>
         </div>

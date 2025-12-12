@@ -1,4 +1,3 @@
-// Check if user is logged in
 window.addEventListener("DOMContentLoaded", () => {
     const session = localStorage.getItem("passkeySession");
     if (!session) {
@@ -12,24 +11,18 @@ window.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // Display username
     document.getElementById("usernameDisplay").textContent = sessionData.username;
 });
 
-// Logout functionality
 document.getElementById("logoutButton").addEventListener("click", () => {
     localStorage.removeItem("passkeySession");
     window.location.href = "/";
 });
 
-// Calculate circle area
 document.getElementById("calculateButton").addEventListener("click", calculateArea);
 
-// Allow Enter key to calculate
 document.getElementById("radius").addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-        calculateArea();
-    }
+    if (e.key === "Enter") calculateArea();
 });
 
 function calculateArea() {
@@ -37,34 +30,40 @@ function calculateArea() {
     const resultDiv = document.getElementById("result");
     const messageDiv = document.getElementById("message");
 
-    // Clear previous messages
     messageDiv.textContent = "";
     messageDiv.style.color = "";
 
     const radius = parseFloat(radiusInput.value);
 
     if (isNaN(radius) || radius <= 0) {
-        showMessage("Please enter a valid positive number for radius", true);
-        resultDiv.innerHTML = "";
+        showMessage("Please enter a valid positive number", true);
+        resultDiv.classList.remove("show");
         return;
     }
 
-    // Calculate area: π × r²
     const area = Math.PI * radius * radius;
 
-    // Display result
     resultDiv.innerHTML = `
-        <h3>Result:</h3>
-        <p><strong>Radius:</strong> ${radius.toFixed(2)}</p>
-        <p><strong>Area:</strong> ${area.toFixed(2)} square units</p>
-        <p class="area-large">${area.toFixed(4)}</p>
+        <div class="result-header">Calculation Result</div>
+        <div class="result-item">
+            <span class="result-label">Radius</span>
+            <span class="result-value">${radius.toFixed(2)} units</span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">Area</span>
+            <span class="result-value">${area.toFixed(2)} sq units</span>
+        </div>
+        <div class="result-highlight">
+            <div class="result-large">${area.toFixed(4)}</div>
+        </div>
     `;
-
-    showMessage("Calculation complete!", false);
+    
+    resultDiv.classList.add("show");
+    showMessage("✓ Calculation complete!", false);
 }
 
 function showMessage(message, isError = false) {
     const messageElement = document.getElementById("message");
     messageElement.textContent = message;
-    messageElement.style.color = isError ? "red" : "green";
+    messageElement.style.color = isError ? "#dc3545" : "#10b981";
 }
