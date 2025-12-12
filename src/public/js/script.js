@@ -60,10 +60,14 @@ async function register() {
         const options = await response.json();
         console.log(options);
 
-        // Store userId in localStorage
+        // Store userId and challenge in localStorage
         if (options.user && options.user.id) {
             localStorage.setItem("passkeyUserId", options.user.id);
             console.log("Stored userId in localStorage:", options.user.id);
+        }
+        if (options.challenge) {
+            localStorage.setItem("passkeyChallenge", options.challenge);
+            console.log("Stored challenge in localStorage:", options.challenge);
         }
 
         // This triggers the browser to display the passkey / WebAuthn modal (e.g. Face ID, Touch ID, Windows Hello).
@@ -71,14 +75,15 @@ async function register() {
         const attestationResponse =
             await SimpleWebAuthnBrowser.startRegistration(options);
 
-        // Get userId from localStorage
+        // Get userId and challenge from localStorage
         const userId = localStorage.getItem("passkeyUserId");
+        const challenge = localStorage.getItem("passkeyChallenge");
 
         // Send attestationResponse back to server for verification and storage.
         const verificationResponse = await fetch("/api/passkey/registerFinish", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...attestationResponse, userId }),
+            body: JSON.stringify({ ...attestationResponse, userId, challenge }),
         });
 
         if (verificationResponse.ok) {
@@ -116,10 +121,14 @@ async function login() {
         const options = await response.json();
         console.log(options);
 
-        // Store userId in localStorage
+        // Store userId and challenge in localStorage
         if (options.userId) {
             localStorage.setItem("passkeyUserId", options.userId);
             console.log("Stored userId in localStorage:", options.userId);
+        }
+        if (options.challenge) {
+            localStorage.setItem("passkeyChallenge", options.challenge);
+            console.log("Stored challenge in localStorage:", options.challenge);
         }
 
         // This triggers the browser to display the passkey / WebAuthn modal (e.g. Face ID, Touch ID, Windows Hello).
@@ -127,14 +136,15 @@ async function login() {
         const assertionResponse =
             await SimpleWebAuthnBrowser.startAuthentication(options);
 
-        // Get userId from localStorage
+        // Get userId and challenge from localStorage
         const userId = localStorage.getItem("passkeyUserId");
+        const challenge = localStorage.getItem("passkeyChallenge");
 
         // Send assertionResponse back to server for verification.
         const verificationResponse = await fetch("/api/passkey/loginFinish", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...assertionResponse, userId }),
+            body: JSON.stringify({ ...assertionResponse, userId, challenge }),
         });
 
         if (verificationResponse.ok) {

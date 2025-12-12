@@ -40,7 +40,6 @@ export const handleLoginStart = async (
             rpID,
         });
 
-        req.session.currentChallenge = options.challenge;
         console.log("[LOGIN START] Success, sending options for user:", user.id);
         res.send({ ...options, userId: user.id });
     } catch (error) {
@@ -59,8 +58,8 @@ export const handleLoginFinish = async (
     next: NextFunction,
 ) => {
     const { body } = req;
-    const { currentChallenge } = req.session;
     const userId = body.userId;
+    const currentChallenge = body.challenge;
     console.log("[LOGIN FINISH] Request body - userId:", userId, "challenge:", currentChallenge);
 
     if (!userId) {
@@ -118,7 +117,5 @@ export const handleLoginFinish = async (
                 ? error
                 : new CustomError("Internal Server Error", 500),
         );
-    } finally {
-        req.session.currentChallenge = undefined;
     }
 };

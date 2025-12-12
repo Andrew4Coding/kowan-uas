@@ -51,7 +51,6 @@ export const handleRegisterStart = async (
             supportedAlgorithmIDs: [-7, -257],
         });
 
-        req.session.currentChallenge = options.challenge;
         console.log("[REGISTER START] Success, sending options with userId:", user.id);
         res.send(options);
     } catch (error) {
@@ -70,8 +69,8 @@ export const handleRegisterFinish = async (
     next: NextFunction,
 ) => {
     const { body } = req;
-    const { currentChallenge } = req.session;
     const userId = body.userId;
+    const currentChallenge = body.challenge;
     console.log("[REGISTER FINISH] Request body - userId:", userId, "challenge:", currentChallenge);
 
     if (!userId) {
@@ -116,7 +115,5 @@ export const handleRegisterFinish = async (
                 ? error
                 : new CustomError("Internal Server Error", 500),
         );
-    } finally {
-        req.session.currentChallenge = undefined;
     }
 };
