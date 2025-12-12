@@ -52,10 +52,8 @@ export const handleRegisterStart = async (
         });
 
         req.session.currentChallenge = options.challenge;
-
-        // @ts-expect-error
-        req.session.username = user.username;
-        console.log("[REGISTER START] Success, sending options");
+        req.session.userId = user.id;
+        console.log("[REGISTER START] Success, sending options with userId:", user.id);
         res.send(options);
     } catch (error) {
         console.error("[REGISTER START] Error:", error);
@@ -73,12 +71,11 @@ export const handleRegisterFinish = async (
     next: NextFunction,
 ) => {
     const { body } = req;
-    // @ts-expect-error
-    const { currentChallenge, username } = req.session;
-    console.log("[REGISTER FINISH] Session data - username:", username, "challenge:", currentChallenge);
+    const { currentChallenge, userId } = req.session;
+    console.log("[REGISTER FINISH] Session data - userId:", userId, "challenge:", currentChallenge);
 
-    if (!username) {
-        return next(new CustomError("Username is missing", 400));
+    if (!userId) {
+        return next(new CustomError("User ID is missing", 400));
     }
 
     if (!currentChallenge) {
@@ -86,7 +83,7 @@ export const handleRegisterFinish = async (
     }
 
     try {
-        const user = await userService.getUserByUsername(username);
+        const user = await userService.getUserById(userId);
         if (!user) {
             return next(new CustomError("User not found", 404));
         }
@@ -121,8 +118,6 @@ export const handleRegisterFinish = async (
         );
     } finally {
         req.session.currentChallenge = undefined;
-
-        // @ts-expect-error
-        req.session.username = undefined;
+        req.session.userId = undefined;
     }
 };

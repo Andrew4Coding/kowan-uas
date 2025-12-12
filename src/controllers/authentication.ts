@@ -41,7 +41,7 @@ export const handleLoginStart = async (
         });
 
         req.session.currentChallenge = options.challenge;
-        console.log("[LOGIN START] Success, sending options");
+        console.log("[LOGIN START] Success, sending options for user:", user.id);
         res.send(options);
     } catch (error) {
         console.error("[LOGIN START] Error:", error);
