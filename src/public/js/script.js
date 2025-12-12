@@ -69,7 +69,7 @@ async function register() {
         const verificationResponse = await fetch("/api/passkey/registerFinish", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...attestationResponse, userId: options.userId }),
+            body: JSON.stringify(attestationResponse),
         });
 
         if (verificationResponse.ok) {

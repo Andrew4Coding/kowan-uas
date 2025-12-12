@@ -52,8 +52,11 @@ export const handleRegisterStart = async (
         });
 
         req.session.currentChallenge = options.challenge;
+
+        // @ts-expect-error
+        req.session.username = user.username;
         console.log("[REGISTER START] Success, sending options");
-        res.send({ ...options, userId: user.id });
+        res.send(options);
     } catch (error) {
         console.error("[REGISTER START] Error:", error);
         next(
@@ -70,12 +73,12 @@ export const handleRegisterFinish = async (
     next: NextFunction,
 ) => {
     const { body } = req;
-    const { currentChallenge } = req.session;
-    const userId = body.userId;
-    console.log("[REGISTER FINISH] Session data - userId:", userId, "challenge:", currentChallenge);
+    // @ts-expect-error
+    const { currentChallenge, username } = req.session;
+    console.log("[REGISTER FINISH] Session data - username:", username, "challenge:", currentChallenge);
 
-    if (!userId) {
-        return next(new CustomError("User ID is missing", 400));
+    if (!username) {
+        return next(new CustomError("Username is missing", 400));
     }
 
     if (!currentChallenge) {
@@ -83,6 +86,10 @@ export const handleRegisterFinish = async (
     }
 
     try {
+        const user = await userService.getUserByUsername(username);
+        if (!user) {
+            return next(new CustomError("User not found", 404));
+        }
         const verification = await verifyRegistrationResponse({
             response: body as RegistrationResponseJSON,
             expectedChallenge: currentChallenge,
@@ -95,7 +102,7 @@ export const handleRegisterFinish = async (
             const { credentialPublicKey, credentialID, counter } =
                 verification.registrationInfo;
             await credentialService.saveNewCredential(
-                userId,
+                user.id,
                 uint8ArrayToBase64(credentialID),
                 uint8ArrayToBase64(credentialPublicKey),
                 counter,
@@ -114,5 +121,8 @@ export const handleRegisterFinish = async (
         );
     } finally {
         req.session.currentChallenge = undefined;
+
+        // @ts-expect-error
+        req.session.username = undefined;
     }
 };
