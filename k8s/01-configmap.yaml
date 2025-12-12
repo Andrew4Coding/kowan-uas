@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init
+  namespace: circle-calculator
+data:
+  init.sql: |
+    -- Create users table
+    CREATE TABLE IF NOT EXISTS users (
+        id VARCHAR(255) PRIMARY KEY,
+        username VARCHAR(255) UNIQUE NOT NULL
+    );
+
+    -- Create credentials table
+    CREATE TABLE IF NOT EXISTS credentials (
+        id SERIAL PRIMARY KEY,
+        user_id VARCHAR(255) NOT NULL,
+        credential_id VARCHAR(255) NOT NULL,
+        public_key TEXT NOT NULL,
+        counter INT NOT NULL,
+        transports VARCHAR(255),
+        FOREIGN KEY (user_id) REFERENCES users(id)
+    );
+
+    -- Create indexes for better performance
+    CREATE INDEX IF NOT EXISTS idx_credentials_user_id ON credentials(user_id);
+    CREATE INDEX IF NOT EXISTS idx_credentials_credential_id ON credentials(credential_id);
+    CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);

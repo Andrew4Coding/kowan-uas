@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Circle Area Calculator - Passkey Tutorial</title>
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Circle Area Calculator</h1>
+                <div class="user-info">
+                    <span id="welcomeMessage">Welcome, <strong id="usernameDisplay"></strong>!</span>
+                    <button id="logoutButton" class="logout-btn">Logout</button>
+                </div>
+            </div>
+            <div id="message"></div>
+
+            <div class="calculator">
+                <div class="input-group">
+                    <label for="radius">Enter Radius:</label>
+                    <input type="number" id="radius" placeholder="Enter radius" step="0.01" min="0" />
+                    <button id="calculateButton">Calculate Area</button>
+                </div>
+
+                <div id="result" class="result"></div>
+
+                <div class="formula">
+                    <p><strong>Formula:</strong> Area = π × r²</p>
+                </div>
+            </div>
+        </div>
+
+        <script src="js/calculator.js"></script>
+    </body>
+</html>
