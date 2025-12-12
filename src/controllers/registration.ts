@@ -52,9 +52,6 @@ export const handleRegisterStart = async (
         });
 
         req.session.currentChallenge = options.challenge;
-
-        // @ts-expect-error
-        req.session.userId = user.id;
         console.log("[REGISTER START] Success, sending options with userId:", user.id);
         res.send(options);
     } catch (error) {
@@ -73,10 +70,9 @@ export const handleRegisterFinish = async (
     next: NextFunction,
 ) => {
     const { body } = req;
-
-    // @ts-expect-error
-    const { currentChallenge, userId } = req.session;
-    console.log("[REGISTER FINISH] Session data - userId:", userId, "challenge:", currentChallenge);
+    const { currentChallenge } = req.session;
+    const userId = body.userId;
+    console.log("[REGISTER FINISH] Request body - userId:", userId, "challenge:", currentChallenge);
 
     if (!userId) {
         return next(new CustomError("User ID is missing", 400));
@@ -122,8 +118,5 @@ export const handleRegisterFinish = async (
         );
     } finally {
         req.session.currentChallenge = undefined;
-
-        // @ts-expect-error
-        req.session.userId = undefined;
     }
 };

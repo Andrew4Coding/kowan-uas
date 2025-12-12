@@ -60,16 +60,25 @@ async function register() {
         const options = await response.json();
         console.log(options);
 
+        // Store userId in localStorage
+        if (options.user && options.user.id) {
+            localStorage.setItem("passkeyUserId", options.user.id);
+            console.log("Stored userId in localStorage:", options.user.id);
+        }
+
         // This triggers the browser to display the passkey / WebAuthn modal (e.g. Face ID, Touch ID, Windows Hello).
         // A new attestation is created. This also means a new public-private-key pair is created.
         const attestationResponse =
             await SimpleWebAuthnBrowser.startRegistration(options);
 
+        // Get userId from localStorage
+        const userId = localStorage.getItem("passkeyUserId");
+
         // Send attestationResponse back to server for verification and storage.
         const verificationResponse = await fetch("/api/passkey/registerFinish", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(attestationResponse),
+            body: JSON.stringify({ ...attestationResponse, userId }),
         });
 
         if (verificationResponse.ok) {
@@ -107,16 +116,25 @@ async function login() {
         const options = await response.json();
         console.log(options);
 
+        // Store userId in localStorage
+        if (options.userId) {
+            localStorage.setItem("passkeyUserId", options.userId);
+            console.log("Stored userId in localStorage:", options.userId);
+        }
+
         // This triggers the browser to display the passkey / WebAuthn modal (e.g. Face ID, Touch ID, Windows Hello).
         // A new assertionResponse is created. This also means that the challenge has been signed.
         const assertionResponse =
             await SimpleWebAuthnBrowser.startAuthentication(options);
 
+        // Get userId from localStorage
+        const userId = localStorage.getItem("passkeyUserId");
+
         // Send assertionResponse back to server for verification.
         const verificationResponse = await fetch("/api/passkey/loginFinish", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(assertionResponse),
+            body: JSON.stringify({ ...assertionResponse, userId }),
         });
 
         if (verificationResponse.ok) {

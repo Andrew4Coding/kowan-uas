@@ -42,7 +42,7 @@ export const handleLoginStart = async (
 
         req.session.currentChallenge = options.challenge;
         console.log("[LOGIN START] Success, sending options for user:", user.id);
-        res.send(options);
+        res.send({ ...options, userId: user.id });
     } catch (error) {
         console.error("[LOGIN START] Error:", error);
         next(
@@ -60,7 +60,12 @@ export const handleLoginFinish = async (
 ) => {
     const { body } = req;
     const { currentChallenge } = req.session;
-    console.log("[LOGIN FINISH] Session data - challenge:", currentChallenge);
+    const userId = body.userId;
+    console.log("[LOGIN FINISH] Request body - userId:", userId, "challenge:", currentChallenge);
+
+    if (!userId) {
+        return next(new CustomError("User ID is missing", 400));
+    }
 
     if (!currentChallenge) {
         return next(new CustomError("Current challenge is missing", 400));
